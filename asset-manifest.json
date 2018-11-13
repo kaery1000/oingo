@@ -1,13 +1,13 @@
 {
   "main.css": "/oingo/static/css/main.d3d12515.chunk.css",
-  "main.js": "/oingo/static/js/main.fefa1eba.chunk.js",
-  "main.js.map": "/oingo/static/js/main.fefa1eba.chunk.js.map",
+  "main.js": "/oingo/static/js/main.694748ca.chunk.js",
+  "main.js.map": "/oingo/static/js/main.694748ca.chunk.js.map",
   "static/js/1.5a762c93.chunk.js": "/oingo/static/js/1.5a762c93.chunk.js",
   "static/js/1.5a762c93.chunk.js.map": "/oingo/static/js/1.5a762c93.chunk.js.map",
   "runtime~main.js": "/oingo/static/js/runtime~main.c800570f.js",
   "runtime~main.js.map": "/oingo/static/js/runtime~main.c800570f.js.map",
   "static/css/main.d3d12515.chunk.css.map": "/oingo/static/css/main.d3d12515.chunk.css.map",
   "index.html": "/oingo/index.html",
-  "precache-manifest.d225b23efd450a9cf6a18f563c8f340b.js": "/oingo/precache-manifest.d225b23efd450a9cf6a18f563c8f340b.js",
+  "precache-manifest.c37bbd0bd17a734cd527fc3781004d72.js": "/oingo/precache-manifest.c37bbd0bd17a734cd527fc3781004d72.js",
   "service-worker.js": "/oingo/service-worker.js"
 }
