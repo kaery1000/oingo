@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Grid, Loader, Dimmer, Form, Button, Message, Input} from 'semantic-ui-react';
+import { Grid, Loader, Dimmer, Form, Button, Message, Input } from 'semantic-ui-react';
 import config from '../config';
 
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
@@ -11,42 +11,44 @@ const poolData = {
 
 class Register extends Component {
   state = {
-    loadingData:false,
-    loading:false,
-    errorMessage:'',
-    msg:'',
-    name:'',
-    email:'',
-    password:'',
+    loadingData: false,
+    loading: false,
+    errorMessage: '',
+    msg: '',
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
   }
 
-  async componentDidMount(){
-    this.setState({loadingData:true});
+  async componentDidMount() {
+    this.setState({ loadingData: true });
     document.title = "Oingo | User Register";
-    this.setState({loadingData:false});
+    this.setState({ loadingData: false });
   }
 
   onSubmit = async () => {
-    this.setState({errorMessage:''});
+    this.setState({ errorMessage: '' });
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     var attributeList = [];
 
-    attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({Name:"name",Value:this.state.name}));
-    attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({Name:"email",Value:this.state.email}));
-    
+    attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "name", Value: this.state.name }));
+    attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: this.state.email }));
+    attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "phone_number", Value: this.state.phone }));
+
     userPool.signUp(this.state.email, this.state.password, attributeList, null, (err, result) => {
       if (err) {
-        this.setState({errorMessage:err.message});
+        this.setState({ errorMessage: err.message });
         return;
       }
       var cognitoUser = result.user;
-      this.setState({msg:"Please check your email to complete registration. To login, your username is " + cognitoUser.getUsername()});
+      this.setState({ msg: "Please check your email to complete registration. To login, your username is " + cognitoUser.getUsername() });
     });
 
   }
 
   render() {
-    if(this.state.loadingData){
+    if (this.state.loadingData) {
       return (
         <Dimmer active inverted>
           <Loader size='massive'>Loading...</Loader>
@@ -56,14 +58,14 @@ class Register extends Component {
 
     let statusMessage;
 
-    if (this.state.msg === ''){
+    if (this.state.msg === '') {
       statusMessage = null;
-    }else{
+    } else {
       statusMessage = (
-      <Message positive>
-        <Message.Header>Success!</Message.Header>
-        {this.state.msg}
-      </Message>
+        <Message positive>
+          <Message.Header>Success!</Message.Header>
+          {this.state.msg}
+        </Message>
       );
     }
 
@@ -72,29 +74,33 @@ class Register extends Component {
         <h2>User Registration</h2>
         <Grid stackable>
           <Grid.Column>
-          <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-            <Form.Group>
-              <Form.Field width={5}>
-                <label>Name</label>
-                <Input onChange={event => this.setState({name:event.target.value})} ></Input>
-              </Form.Field>
-              <Form.Field width={5}>
-                <label>Email</label>
-                <Input onChange={event => this.setState({email:event.target.value})} ></Input>
-              </Form.Field>
-            </Form.Group>
-            <Form.Group>
-              <Form.Field width={5}>
-                <label>Password</label>
-                <Input onChange={event => this.setState({password:event.target.value})} ></Input>
-              </Form.Field>
-              <Button floated='right' primary basic loading={this.state.loading}>
+            <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+              <Form.Group>
+                <Form.Field width={5}>
+                  <label>Name</label>
+                  <Input onChange={event => this.setState({ name: event.target.value })} ></Input>
+                </Form.Field>
+                <Form.Field width={5}>
+                  <label>Email</label>
+                  <Input onChange={event => this.setState({ email: event.target.value })} ></Input>
+                </Form.Field>
+              </Form.Group>
+              <Form.Group>
+                <Form.Field width={5}>
+                  <label>Phone Number</label>
+                  <Input onChange={event => this.setState({ phone: event.target.value })} ></Input>
+                </Form.Field>
+                <Form.Field width={5}>
+                  <label>Password</label>
+                  <Input onChange={event => this.setState({ password: event.target.value })} ></Input>
+                </Form.Field>
+              </Form.Group>
+              <Button floated='left' primary basic loading={this.state.loading}>
                 Register
-              </Button>
-            </Form.Group>
-            <Message error header="Oops!" content={this.state.errorMessage} />
-            {statusMessage}
-          </Form>
+            </Button>
+              <br /><Message error header="Oops!" content={this.state.errorMessage} />
+              {statusMessage}
+            </Form>
           </Grid.Column>
         </Grid>
       </div>

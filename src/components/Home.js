@@ -1,24 +1,52 @@
 import React, { Component } from 'react';
-import {Grid, Loader, Dimmer, Card, Button} from 'semantic-ui-react';
-import {Link} from 'react-router-dom';
+import { Grid, Loader, Dimmer, Card, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 class Home extends Component {
   state = {
-    loadingData:false,
+    errorMessage: '',
+    loadingData: false,
+    coords: '',
   }
 
-  async componentDidMount(){
-    this.setState({loadingData:true});
+  async componentDidMount() {
+    this.setState({ loadingData: true });
     document.title = "Oingo";
-    this.setState({loadingData:false});
+
+    this.getLocation();
+
+    this.setState({ loadingData: false });
   }
+
+  getLocation = () => {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+
+    let success = (pos) => {
+      this.setState({ coords: pos.coords });
+      console.log(pos.coords);
+    }
+
+    let error = (err) => {
+      this.setState({ errorMessage: err.message });
+    }
+
+    if (!window.navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    window.navigator.geolocation.getCurrentPosition(success, error, options);
+  };
 
   render() {
-    if(this.state.loadingData){
+    if (this.state.loadingData) {
       return (
-          <Dimmer active inverted>
-            <Loader size='massive'>Loading...</Loader>
-          </Dimmer>
+        <Dimmer active inverted>
+          <Loader size='massive'>Loading...</Loader>
+        </Dimmer>
       );
     }
 
@@ -34,6 +62,9 @@ class Home extends Component {
                 <br /><br />
                 <Link to='/'><Button primary>Button</Button></Link>
                 <br /><br /><br />
+                Latitude: {this.state.coords.latitude}<br />
+                Longitude: {this.state.coords.longitude}
+                {this.state.errorMessage && <div style={{ color: "#cc0000" }}>{this.state.errorMessage}</div>}
               </Card.Description>
             </Card.Content>
           </Card>
