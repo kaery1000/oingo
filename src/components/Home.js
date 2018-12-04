@@ -27,7 +27,6 @@ class Home extends Component {
 
     let success = (pos) => {
       this.setState({ coords: pos.coords });
-      console.log(pos.coords);
     }
 
     let error = (err) => {
@@ -60,7 +59,7 @@ class Home extends Component {
               <Card.Header><h1>Hi There!</h1></Card.Header>
               <Card.Description>
                 <br /><br />
-                <Link to='/'><Button primary>Button</Button></Link>
+                <Link to='/oingo/add_note'><Button primary>Add Note</Button></Link>
                 <br /><br /><br />
                 Latitude: {this.state.coords.latitude}<br />
                 Longitude: {this.state.coords.longitude}
