@@ -1,7 +1,34 @@
+import aws4 from 'aws4';
+import axios from 'axios';
+import config from './config';
+
+export async function awsSigning(reqParam, path) {
+  let signedRequest = aws4.sign({
+    host: 'l7057qjhsc.execute-api.us-east-2.amazonaws.com/',
+    method: 'POST',
+    url: 'https://l7057qjhsc.execute-api.us-east-2.amazonaws.com/' + path,
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': config.apiKey,
+    },
+
+    secretAccessKey: config.accessKeyId,
+    accessKeyId: config.secretAccessKey,
+    data: reqParam,
+    body: reqParam
+  })
+
+  delete signedRequest.headers['Host']
+  delete signedRequest.headers['Content-Length']
+
+  let response = await axios(signedRequest);
+  return response;
+};
+
 export const tagOptions = [
   { key: 'shopping', text: 'Shopping', value: "shopping" },
   { key: 'food', text: 'Food', value: "food" },
-  { key: 'entertainment', text: 'Electronic', value: "entertainment" },
+  { key: 'entertainment', text: 'Entertainment', value: "entertainment" },
   { key: 'music', text: 'Music', value: "music" },
 ]
 

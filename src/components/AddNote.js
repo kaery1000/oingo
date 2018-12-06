@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Loader, Dimmer, Form, Icon, Input, Message, Button, Dropdown } from 'semantic-ui-react';
 import config from '../config';
-import { tagOptions } from '../utils';
+import { tagOptions, awsSigning } from '../utils';
 
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const poolData = {
@@ -68,11 +68,18 @@ class AddNote extends Component {
     window.navigator.geolocation.getCurrentPosition(success, error, options);
   };
 
-  onSubmit = () => {
+  async onSubmit() {
     this.setState({ loadingData: true });
+    let rdsRequest = {
+      'action': "addNote",
+      'uID': this.state.sessionPayload.sub,
+      'nTitle': this.state.title,
+      'nDesc': this.state.description,
 
+    }
 
-
+    let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
+    console.log(res);
     this.setState({ loadingData: false });
   }
 

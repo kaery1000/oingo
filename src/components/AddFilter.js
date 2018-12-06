@@ -5,7 +5,6 @@ import { tagOptions, dayOptions, frequencyOptions } from '../utils';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const poolData = {
   UserPoolId: config.cognito.userPoolId,
@@ -25,6 +24,8 @@ class AddFilter extends Component {
     visibility: '',
     latitude: '',
     longitude: '',
+    startTime: new Date(),
+    endTime: new Date(),
     radius: '',
   }
 
@@ -74,7 +75,8 @@ class AddFilter extends Component {
 
   onSubmit = () => {
     this.setState({ loadingData: true });
-
+    console.log(this.state.startTime);
+    console.log(this.state.frequency);
     this.setState({ loadingData: false });
   }
 
@@ -121,12 +123,40 @@ class AddFilter extends Component {
               </Form.Group>
               <Form.Group inline>
                 <Form.Field width={5}>
+                  <label>Frequency</label>
+                  <Dropdown placeholder='Frequency' disabled={this.state.day === 'every'}
+                    value={this.state.day === 'every' ? 'every' : this.state.frequency}
+                    options={frequencyOptions} search selection onChange={(k, { value }) => this.setState({ frequency: value })} />
+                </Form.Field>
+                <Form.Field width={5}>
                   <label>On Day(s)</label>
                   <Dropdown placeholder='Day' value={this.state.day} options={dayOptions} search selection onChange={(k, { value }) => this.setState({ day: value })} />
                 </Form.Field>
-                <Form.Field width={5}>
-                  <label>Frequency</label>
-                  <Dropdown placeholder='Frequency' value={this.state.frequency} options={frequencyOptions} search selection onChange={(k, { value }) => this.setState({ frequency: value })} />
+              </Form.Group>
+              <Form.Group inline>
+                <Form.Field>
+                  <label>Start Time</label>
+                  <DatePicker
+                    selected={this.state.startTime}
+                    onChange={event => this.setState({ startTime: event })}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={30}
+                    dateFormat="hh:mm aa"
+                    timeCaption="Time"
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>End Time</label>
+                  <DatePicker
+                    selected={this.state.endTime}
+                    onChange={event => this.setState({ endTime: event })}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={30}
+                    dateFormat="hh:mm aa"
+                    timeCaption="Time"
+                  />
                 </Form.Field>
               </Form.Group>
               <Form.Group inline>
@@ -139,24 +169,10 @@ class AddFilter extends Component {
                   <Input onChange={event => this.setState({ longitude: event.target.value })} ></Input>
                 </Form.Field>
               </Form.Group>
-              <Form.Group inline>
-                <Form.Field width={5}>
-                  <label>Location Radius</label>
-                  <Input placeholder="in meters" onChange={event => this.setState({ radius: event.target.value })} ></Input>
-                </Form.Field>
-                <Form.Field>
-                  <label>DateTime</label>
-                  <DatePicker
-                    selected={this.state.startDate}
-                    onChange={this.handleChange}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={15}
-                    dateFormat="MMMM d, yyyy h:mm aa"
-                    timeCaption="Time"
-                  />
-                </Form.Field>
-              </Form.Group>
+              <Form.Field width={5}>
+                <label>Location Radius</label>
+                <Input placeholder="in meters" onChange={event => this.setState({ radius: event.target.value })} ></Input>
+              </Form.Field>
               <Button floated='left' primary basic loading={this.state.loading}>
                 <Icon name='sign-in' />Add
               </Button>
