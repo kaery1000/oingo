@@ -28,9 +28,6 @@ class LogInOut extends Component {
 
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     var cognitoUser = userPool.getCurrentUser();
-    console.log(cognitoUser);
-    //console.log(userPool.currentSession());
-    //console.log(cognitoUser.signInUserSession.idToken.payload);
 
     if (cognitoUser != null) {
       this.setState({ loggedin: true });
@@ -39,8 +36,6 @@ class LogInOut extends Component {
           alert(err);
           return;
         }
-        console.log(session.idToken.payload);
-        console.log(session.idToken.payload.email);
       });
     }
     this.setState({ loadingData: false, cognitoUser, userPool });

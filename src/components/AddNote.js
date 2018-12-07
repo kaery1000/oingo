@@ -28,6 +28,7 @@ class AddNote extends Component {
     this.setState({ loadingData: true });
     document.title = "Oingo | Add Note";
     this.sessionPayload();
+    this.getLocation();
     this.setState({ loadingData: false });
   }
 
@@ -68,18 +69,32 @@ class AddNote extends Component {
     window.navigator.geolocation.getCurrentPosition(success, error, options);
   };
 
-  async onSubmit() {
+  onSubmit = async () => {
     this.setState({ loadingData: true });
+    var d = new Date,
+      dformat = [d.getMonth() + 1,
+      d.getDate(),
+      d.getFullYear()].join('/') + ' ' +
+        [d.getHours(),
+        d.getMinutes(),
+        d.getSeconds()].join(':');
+
     let rdsRequest = {
       'action': "addNote",
       'uID': this.state.sessionPayload.sub,
       'nTitle': this.state.title,
       'nDesc': this.state.description,
-
+      'nVisible': this.state.visibility,
+      'nTag': this.state.tag,
+      'nRadius': this.state.radius,
+      'nLat': this.state.coords.latitude,
+      'nLong': this.state.coords.longitude,
+      'nTime': dformat
     }
 
-    let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-    console.log(res);
+    console.log(rdsRequest);
+    //let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
+    //this.setState({ msg: res.data.body, loadingData: false });
     this.setState({ loadingData: false });
   }
 

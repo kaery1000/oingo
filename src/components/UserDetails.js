@@ -66,9 +66,7 @@ class UserDetails extends Component {
     }
 
     let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-    this.setState({ msg: res.data.body });
-
-    this.setState({ loading: false });
+    this.setState({ msg: res.data.body, loading: false });
   }
 
   render() {

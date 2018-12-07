@@ -59,7 +59,13 @@ class Home extends Component {
               <Card.Header><h1>Hi There!</h1></Card.Header>
               <Card.Description>
                 <br /><br />
-                <Link to='/oingo/add_note'><Button primary>Add Note</Button></Link>
+                <Button.Group>
+                  <Link to='/oingo/user_details'><Button>Profile</Button></Link>
+                </Button.Group><br /><br />
+                <Button.Group>
+                  <Link to='/oingo/add_note'><Button>Add Note</Button></Link>
+                  <Link to='/oingo/add_filter'><Button>Add Filter</Button></Link>
+                </Button.Group>
                 <br /><br /><br />
                 Latitude: {this.state.coords.latitude}<br />
                 Longitude: {this.state.coords.longitude}

@@ -1,6 +1,5 @@
 import aws4 from 'aws4';
 import axios from 'axios';
-import config from './config';
 
 export async function awsSigning(reqParam, path) {
   let signedRequest = aws4.sign({
@@ -9,11 +8,11 @@ export async function awsSigning(reqParam, path) {
     url: 'https://l7057qjhsc.execute-api.us-east-2.amazonaws.com/' + path,
     headers: {
       'content-type': 'application/json',
-      'x-api-key': config.apiKey,
+      'x-api-key': process.env.REACT_APP_apiKey,
     },
 
-    secretAccessKey: config.accessKeyId,
-    accessKeyId: config.secretAccessKey,
+    secretAccessKey: process.env.REACT_APP_accessKeyId,
+    accessKeyId: process.env.REACT_APP_secretAccessKey,
     data: reqParam,
     body: reqParam
   })
