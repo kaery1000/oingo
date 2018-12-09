@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/oingo/precache-manifest.c37bbd0bd17a734cd527fc3781004d72.js"
+  "/oingo/precache-manifest.70aafb28e89a8d201a6615956a716397.js"
 );
 
 workbox.clientsClaim();

@@ -1,13 +1,15 @@
 {
-  "main.css": "/oingo/static/css/main.d3d12515.chunk.css",
-  "main.js": "/oingo/static/js/main.694748ca.chunk.js",
-  "main.js.map": "/oingo/static/js/main.694748ca.chunk.js.map",
-  "static/js/1.5a762c93.chunk.js": "/oingo/static/js/1.5a762c93.chunk.js",
-  "static/js/1.5a762c93.chunk.js.map": "/oingo/static/js/1.5a762c93.chunk.js.map",
+  "main.css": "/oingo/static/css/main.a035b076.chunk.css",
+  "main.js": "/oingo/static/js/main.6d2ae35f.chunk.js",
+  "main.js.map": "/oingo/static/js/main.6d2ae35f.chunk.js.map",
+  "static/css/1.809637b5.chunk.css": "/oingo/static/css/1.809637b5.chunk.css",
+  "static/js/1.e1a0c900.chunk.js": "/oingo/static/js/1.e1a0c900.chunk.js",
+  "static/js/1.e1a0c900.chunk.js.map": "/oingo/static/js/1.e1a0c900.chunk.js.map",
   "runtime~main.js": "/oingo/static/js/runtime~main.c800570f.js",
   "runtime~main.js.map": "/oingo/static/js/runtime~main.c800570f.js.map",
-  "static/css/main.d3d12515.chunk.css.map": "/oingo/static/css/main.d3d12515.chunk.css.map",
+  "static/css/1.809637b5.chunk.css.map": "/oingo/static/css/1.809637b5.chunk.css.map",
+  "static/css/main.a035b076.chunk.css.map": "/oingo/static/css/main.a035b076.chunk.css.map",
   "index.html": "/oingo/index.html",
-  "precache-manifest.c37bbd0bd17a734cd527fc3781004d72.js": "/oingo/precache-manifest.c37bbd0bd17a734cd527fc3781004d72.js",
+  "precache-manifest.70aafb28e89a8d201a6615956a716397.js": "/oingo/precache-manifest.70aafb28e89a8d201a6615956a716397.js",
   "service-worker.js": "/oingo/service-worker.js"
 }
