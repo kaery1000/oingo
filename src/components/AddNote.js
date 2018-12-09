@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Grid, Loader, Dimmer, Form, Icon, Input, Message, Button, Dropdown } from 'semantic-ui-react';
 import config from '../config';
-import { tagOptions, awsSigning } from '../utils';
-
+import DatePicker from "react-datepicker";
+import { awsSigning, tagOptions, dayOptions, frequencyOptions } from '../utils';
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const poolData = {
   UserPoolId: config.cognito.userPoolId,
@@ -22,6 +22,10 @@ class AddNote extends Component {
     visibility: '',
     tag: '',
     radius: '',
+    day: '',
+    frequency: '',
+    startTime: new Date(),
+    endTime: new Date(),
   }
 
   async componentDidMount() {
@@ -71,30 +75,30 @@ class AddNote extends Component {
 
   onSubmit = async () => {
     this.setState({ loadingData: true });
-    var d = new Date,
-      dformat = [d.getMonth() + 1,
-      d.getDate(),
-      d.getFullYear()].join('/') + ' ' +
-        [d.getHours(),
-        d.getMinutes(),
-        d.getSeconds()].join(':');
+    if (this.state.endTime.getHours() <= this.state.startTime.getHours()) {
+      this.setState({ errorMessage: "End Time must be > Start Time!" });
+    } else {
+      let rdsRequest = {
+        'action': "addNote",
+        'uID': this.state.sessionPayload.sub,
+        'nTitle': this.state.title,
+        'nDesc': this.state.description,
+        'nVisible': this.state.visibility,
+        'day': this.state.day,
+        'frequency': this.state.frequency,
+        'nTag': this.state.tag,
+        'nRadius': this.state.radius,
+        'nLat': this.state.coords.latitude,
+        'nLong': this.state.coords.longitude,
+        'startTime': this.state.startTime.getHours(),
+        'endTime': this.state.endTime.getHours(),
+      }
 
-    let rdsRequest = {
-      'action': "addNote",
-      'uID': this.state.sessionPayload.sub,
-      'nTitle': this.state.title,
-      'nDesc': this.state.description,
-      'nVisible': this.state.visibility,
-      'nTag': this.state.tag,
-      'nRadius': this.state.radius,
-      'nLat': this.state.coords.latitude,
-      'nLong': this.state.coords.longitude,
-      'nTime': dformat
+      console.log(rdsRequest);
+      //let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
+      //console.log(res);
+      //this.setState({ msg: res.data.body, loadingData: false });
     }
-
-    console.log(rdsRequest);
-    //let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-    //this.setState({ msg: res.data.body, loadingData: false });
     this.setState({ loadingData: false });
   }
 
@@ -152,6 +156,44 @@ class AddNote extends Component {
                   <Input placeholder="in meters" onChange={event => this.setState({ radius: event.target.value })} ></Input>
                 </Form.Field>
               </Form.Group>
+              <Form.Group inline>
+                <Form.Field width={5}>
+                  <label>Frequency</label>
+                  <Dropdown placeholder='Frequency' disabled={this.state.day === 'every'}
+                    value={this.state.day === 'every' ? 'every' : this.state.frequency}
+                    options={frequencyOptions} search selection onChange={(k, { value }) => this.setState({ frequency: value })} />
+                </Form.Field>
+                <Form.Field width={5}>
+                  <label>On Day(s)</label>
+                  <Dropdown placeholder='Day' value={this.state.day} options={dayOptions} search selection onChange={(k, { value }) => this.setState({ day: value })} />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group inline>
+                <Form.Field>
+                  <label>Start Time</label>
+                  <DatePicker
+                    selected={this.state.startTime}
+                    onChange={event => this.setState({ startTime: event })}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={60}
+                    dateFormat="hh:mm aa"
+                    timeCaption="Time"
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>End Time</label>
+                  <DatePicker
+                    selected={this.state.endTime}
+                    onChange={event => this.setState({ endTime: event })}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={30}
+                    dateFormat="hh:mm aa"
+                    timeCaption="Time"
+                  />
+                </Form.Field>
+              </Form.Group><br />
               <Button floated='left' primary basic loading={this.state.loading}>
                 <Icon name='sign-in' />Publish
               </Button>

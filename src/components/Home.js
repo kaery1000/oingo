@@ -12,33 +12,8 @@ class Home extends Component {
   async componentDidMount() {
     this.setState({ loadingData: true });
     document.title = "Oingo";
-
-    this.getLocation();
-
     this.setState({ loadingData: false });
   }
-
-  getLocation = () => {
-    var options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    };
-
-    let success = (pos) => {
-      this.setState({ coords: pos.coords });
-    }
-
-    let error = (err) => {
-      this.setState({ errorMessage: err.message });
-    }
-
-    if (!window.navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
-      return;
-    }
-    window.navigator.geolocation.getCurrentPosition(success, error, options);
-  };
 
   render() {
     if (this.state.loadingData) {
@@ -65,11 +40,9 @@ class Home extends Component {
                 <Button.Group>
                   <Link to='/oingo/add_note'><Button>Add Note</Button></Link>
                   <Link to='/oingo/add_filter'><Button>Add Filter</Button></Link>
+                  <Link to='/oingo/user_friends'><Button>Friends</Button></Link>
                 </Button.Group>
                 <br /><br /><br />
-                Latitude: {this.state.coords.latitude}<br />
-                Longitude: {this.state.coords.longitude}
-                {this.state.errorMessage && <div style={{ color: "#cc0000" }}>{this.state.errorMessage}</div>}
               </Card.Description>
             </Card.Content>
           </Card>
