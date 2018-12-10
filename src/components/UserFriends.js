@@ -164,7 +164,7 @@ class UserFriends extends Component {
           <Grid stackable>
             <Grid.Column>
               {this.state.friends.length > 0 && this.renderFriends()}
-              {this.state.friends.length == 0 && <h3>No Friends!</h3>}
+              {this.state.friends.length === 0 && <h3>No Friends!</h3>}
 
               {this.state.pendingReq.length > 0 && this.renderPendingReq()}
               {this.state.pendingReq.length === 0 && <h3>No Pending Requests!</h3>}

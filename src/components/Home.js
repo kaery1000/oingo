@@ -41,6 +41,10 @@ class Home extends Component {
                   <Link to='/oingo/add_note'><Button>Add Note</Button></Link>
                   <Link to='/oingo/add_filter'><Button>Add Filter</Button></Link>
                   <Link to='/oingo/user_friends'><Button>Friends</Button></Link>
+                </Button.Group><br /><br />
+                <Button.Group>
+                  <Link to='/oingo/user_state'><Button>User State</Button></Link>
+                  <Link to='/oingo/personal_notes'><Button>Personal Notes</Button></Link>
                 </Button.Group>
                 <br /><br /><br />
               </Card.Description>
