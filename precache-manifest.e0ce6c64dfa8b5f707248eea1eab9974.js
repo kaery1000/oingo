@@ -4,23 +4,23 @@ self.__precacheManifest = [
     "url": "/oingo/static/js/runtime~main.c800570f.js"
   },
   {
-    "revision": "1d7d3c002ad263b4ac81",
-    "url": "/oingo/static/js/main.1d7d3c00.chunk.js"
+    "revision": "327b57f8918ebdc81838",
+    "url": "/oingo/static/js/main.327b57f8.chunk.js"
   },
   {
-    "revision": "2d84256f04b51e572ebc",
-    "url": "/oingo/static/js/1.2d84256f.chunk.js"
+    "revision": "6eee21d1990e78985c36",
+    "url": "/oingo/static/js/1.6eee21d1.chunk.js"
   },
   {
-    "revision": "1d7d3c002ad263b4ac81",
+    "revision": "327b57f8918ebdc81838",
     "url": "/oingo/static/css/main.a035b076.chunk.css"
   },
   {
-    "revision": "2d84256f04b51e572ebc",
+    "revision": "6eee21d1990e78985c36",
     "url": "/oingo/static/css/1.809637b5.chunk.css"
   },
   {
-    "revision": "f1526e10d54739ceffc23c7904d71011",
+    "revision": "2012843bf7f64e0135ce68b93bcc4882",
     "url": "/oingo/index.html"
   }
 ];
