@@ -140,7 +140,7 @@ class CurrentNotes extends Component {
           <Grid stackable>
             <Grid.Column>
               {this.state.notes.length > 0 && this.renderNotes()}
-              {this.state.notes.length === 0 && <h3>No Personal Notes!</h3>}
+              {this.state.notes.length === 0 && <h3>No Current Notes!</h3>}
             </Grid.Column>
           </Grid>
         }
