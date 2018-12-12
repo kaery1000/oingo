@@ -186,7 +186,7 @@ class AddNote extends Component {
                     onChange={event => this.setState({ endTime: event })}
                     showTimeSelect
                     showTimeSelectOnly
-                    timeIntervals={30}
+                    timeIntervals={60}
                     dateFormat="hh:mm aa"
                     timeCaption="Time"
                   />

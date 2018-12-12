@@ -45,7 +45,6 @@ class FilterList extends Component {
       }
 
       let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-      console.log(res);
       if (Array.isArray(res.data.body)) {
         this.setState({ filters: res.data.body });
       }
