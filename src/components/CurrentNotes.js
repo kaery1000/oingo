@@ -9,7 +9,7 @@ const poolData = {
   ClientId: config.cognito.clientId
 };
 
-class PersonalNotes extends Component {
+class CurrentNotes extends Component {
   state = {
     loadingData: false,
     loading: false,
@@ -18,12 +18,13 @@ class PersonalNotes extends Component {
     loggedin: false,
     sessionPayload: '',
     notes: [],
+    userState: '',
   }
 
   async componentDidMount() {
     this.setState({ loadingData: true });
-    document.title = "Oingo | Personal Notes";
-
+    document.title = "Oingo | Current Notes";
+    this.getLocation();
     let session = '', loggedin = false;
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     var cognitoUser = userPool.getCurrentUser();
@@ -39,9 +40,22 @@ class PersonalNotes extends Component {
     }
 
     if (loggedin) {
-      let rdsRequest = {
-        'retrieve': 'getPersonalNotes',
+      let rdsStateRequest = {
+        'retrieve': 'getState',
         'uID': session.idToken.payload.sub
+      }
+
+      let result = await awsSigning(rdsStateRequest, 'v1/oingordsaction');
+      if ('body' in result.data && !!result.data.body) {
+        this.setState({ userState: result.data.body });
+      }
+
+      let rdsRequest = {
+        'retrieve': 'getCurrentNotes',
+        'uID': session.idToken.payload.sub,
+        'uLat': this.state.coords.latitude,
+        'uLong': this.state.coords.longitude,
+        'uState': this.state.userState,
       }
 
       let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
@@ -53,15 +67,38 @@ class PersonalNotes extends Component {
     this.setState({ sessionPayload: session, loggedin, loadingData: false });
   }
 
+  getLocation = () => {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+
+    let success = (pos) => {
+      this.setState({ coords: pos.coords });
+    }
+
+    let error = (err) => {
+      this.setState({ errorMessage: err.message });
+    }
+
+    if (!window.navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    window.navigator.geolocation.getCurrentPosition(success, error, options);
+  };
+
   renderNotes() {
     let items;
     items = this.state.notes.map((note, id) => {
       return (
         <Table.Row key={id}>
-          <Table.Cell>{note[1]}</Table.Cell>
           <Table.Cell>{note[0]}</Table.Cell>
-          <Table.Cell>{note[3]}</Table.Cell>
+          <Table.Cell>{note[1]}</Table.Cell>
           <Table.Cell>{note[2]}</Table.Cell>
+          <Table.Cell>{note[3]}</Table.Cell>
+          <Table.Cell>{note[4]}</Table.Cell>
         </Table.Row>
       );
     });
@@ -71,9 +108,10 @@ class PersonalNotes extends Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Title</Table.HeaderCell>
-            <Table.HeaderCell>Tag</Table.HeaderCell>
-            <Table.HeaderCell>Create On</Table.HeaderCell>
             <Table.HeaderCell>Description</Table.HeaderCell>
+            <Table.HeaderCell>Create On</Table.HeaderCell>
+            <Table.HeaderCell>Distance</Table.HeaderCell>
+            <Table.HeaderCell>Posted By</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -95,7 +133,7 @@ class PersonalNotes extends Component {
 
     return (
       <div>
-        <h2>Personal Notes</h2>
+        <h2>Current Notes</h2>
         {this.state.loggedin === false && <h3>Please Login!</h3>}
 
         {this.state.loggedin === true &&
@@ -111,4 +149,4 @@ class PersonalNotes extends Component {
   }
 }
 
-export default PersonalNotes;
+export default CurrentNotes;

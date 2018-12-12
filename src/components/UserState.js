@@ -22,7 +22,7 @@ class UserState extends Component {
 
   async componentDidMount() {
     this.setState({ loadingData: true });
-    document.title = "Oingo | User Details";
+    document.title = "Oingo | User State";
 
     let session = '', loggedin = false;
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
@@ -38,21 +38,32 @@ class UserState extends Component {
       });
     }
 
+    if (loggedin) {
+      let rdsRequest = {
+        'retrieve': 'getState',
+        'uID': session.idToken.payload.sub
+      }
+
+      let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
+      if ('body' in res.data && !!res.data.body) {
+        this.setState({ userState: res.data.body });
+      }
+    }
+
     this.setState({ sessionPayload: session, loggedin, loadingData: false });
   }
 
   onSubmit = async () => {
     this.setState({ errorMessage: '', loading: true, msg: '' });
     let rdsRequest = {
-      'update': 'updateUser',
+      'action': 'addState',
       'uID': this.state.sessionPayload.idToken.payload.sub,
-      'FirstName': this.state.FirstName,
-      'LastName': this.state.LastName,
-      'phone_number': this.state.phone_number
+      'userState': this.state.userState
     }
 
-    //let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-    this.setState({ loading: false });
+    let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
+    console.log(res);
+    this.setState({ loading: false, msg: "State updated!" });
   }
 
   render() {
@@ -88,17 +99,17 @@ class UserState extends Component {
         {this.state.loggedin === true &&
           <Grid stackable>
             <Grid.Column>
-              <h3>Update State</h3>
+              <h4>Existing State: {this.state.userState === '' ? 'No state set!' : this.state.userState}</h4>
               <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
                 <Form.Group>
                   <Form.Field width={8}>
-                    <label>First Name</label>
+                    <label>Update State</label>
                     <Input onChange={event => this.setState({ userState: event.target.value })} ></Input>
                   </Form.Field>
                 </Form.Group>
                 <Button floated='left' primary basic loading={this.state.loading}>
-                  <Icon name='sign-in' />Update
-              </Button>
+                  <Icon name='sign-in' />Set
+              </Button><br /><br />
                 <Message error header="Oops!" content={this.state.errorMessage} />
                 {statusMessage}
               </Form>

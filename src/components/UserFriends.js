@@ -47,7 +47,7 @@ class UserFriends extends Component {
       }
 
       let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-      if (typeof res.data.body !== 'string') {
+      if (Array.isArray(res.data.body)) {
         this.setState({ friends: res.data.body });
       }
 

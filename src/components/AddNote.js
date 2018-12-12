@@ -94,10 +94,8 @@ class AddNote extends Component {
         'endTime': this.state.endTime.getHours(),
       }
 
-      console.log(rdsRequest);
-      //let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-      //console.log(res);
-      //this.setState({ msg: res.data.body, loadingData: false });
+      let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
+      this.setState({ msg: res.data.body });
     }
     this.setState({ loadingData: false });
   }
@@ -193,10 +191,10 @@ class AddNote extends Component {
                     timeCaption="Time"
                   />
                 </Form.Field>
-              </Form.Group><br />
+              </Form.Group>
               <Button floated='left' primary basic loading={this.state.loading}>
                 <Icon name='sign-in' />Publish
-              </Button>
+              </Button><br /><br />
               <Message error header="Oops!" content={this.state.errorMessage} />
               {statusMessage}
             </Form>

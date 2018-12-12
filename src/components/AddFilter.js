@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Loader, Dimmer, Form, Icon, Input, Message, Button, Dropdown } from 'semantic-ui-react';
 import config from '../config';
-import { tagOptions, dayOptions, frequencyOptions } from '../utils';
+import { tagOptions, dayOptions, awsSigning } from '../utils';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -20,19 +20,23 @@ class AddFilter extends Component {
     loggedin: false,
     sessionPayload: '',
     day: '',
-    frequency: '',
     visibility: '',
     latitude: '',
     longitude: '',
     startTime: new Date(),
-    endTime: new Date(),
+    endTime: '',
     radius: '',
+    userState: '',
+    useCurrent: false,
   }
 
   async componentDidMount() {
-    this.setState({ loadingData: true });
+    let startTime = this.state.startTime;
+    this.setState({ loadingData: true, endTime: new Date(startTime.getTime() + 60 * 60000) });
     document.title = "Oingo | Add Filter";
     this.sessionPayload();
+    this.getLocation();
+
     this.setState({ loadingData: false });
   }
 
@@ -73,10 +77,36 @@ class AddFilter extends Component {
     window.navigator.geolocation.getCurrentPosition(success, error, options);
   };
 
-  onSubmit = () => {
-    this.setState({ loadingData: true });
-    console.log(this.state.startTime);
-    console.log(this.state.frequency);
+  onSubmit = async () => {
+    this.setState({ loadingData: true, errorMessage: '' });
+    if (this.state.endTime.getHours() <= this.state.startTime.getHours()) {
+      this.setState({ errorMessage: "End Time must be > Start Time!" });
+    } else {
+      let rdsRequest = {
+        'action': "addFilter",
+        'uID': this.state.sessionPayload.sub,
+        'fVisible': this.state.visibility,
+        'uState': this.state.userState,
+        'day': this.state.day,
+        'startTime': this.state.startTime.getHours(),
+        'endTime': this.state.endTime.getHours(),
+        'nTag': this.state.tag,
+        'fRadius': this.state.radius,
+      }
+
+      if (this.state.useCurrent) {
+        rdsRequest['fLat'] = this.state.coords.latitude;
+        rdsRequest['fLong'] = this.state.coords.longitude;
+      } else {
+        rdsRequest['fLat'] = this.state.latitude;
+        rdsRequest['fLong'] = this.state.longitude;
+      }
+
+      let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
+      if ('body' in res.data && res.data.body === true) {
+        this.setState({ msg: "Filter Added Successfully!" });
+      }
+    }
     this.setState({ loadingData: false });
   }
 
@@ -123,12 +153,6 @@ class AddFilter extends Component {
               </Form.Group>
               <Form.Group inline>
                 <Form.Field width={5}>
-                  <label>Frequency</label>
-                  <Dropdown placeholder='Frequency' disabled={this.state.day === 'every'}
-                    value={this.state.day === 'every' ? 'every' : this.state.frequency}
-                    options={frequencyOptions} search selection onChange={(k, { value }) => this.setState({ frequency: value })} />
-                </Form.Field>
-                <Form.Field width={5}>
                   <label>On Day(s)</label>
                   <Dropdown placeholder='Day' value={this.state.day} options={dayOptions} search selection onChange={(k, { value }) => this.setState({ day: value })} />
                 </Form.Field>
@@ -141,7 +165,7 @@ class AddFilter extends Component {
                     onChange={event => this.setState({ startTime: event })}
                     showTimeSelect
                     showTimeSelectOnly
-                    timeIntervals={30}
+                    timeIntervals={60}
                     dateFormat="hh:mm aa"
                     timeCaption="Time"
                   />
@@ -153,7 +177,7 @@ class AddFilter extends Component {
                     onChange={event => this.setState({ endTime: event })}
                     showTimeSelect
                     showTimeSelectOnly
-                    timeIntervals={30}
+                    timeIntervals={60}
                     dateFormat="hh:mm aa"
                     timeCaption="Time"
                   />
@@ -162,26 +186,35 @@ class AddFilter extends Component {
               <Form.Group inline>
                 <Form.Field width={5}>
                   <label>Latitude</label>
-                  <Input onChange={event => this.setState({ latitude: event.target.value })} ></Input>
+                  <Input value={this.state.useCurrent ? this.state.coords.latitude : this.state.latitude} onChange={event => this.setState({ latitude: event.target.value })} ></Input>
                 </Form.Field>
                 <Form.Field width={5}>
                   <label>Longitude</label>
-                  <Input onChange={event => this.setState({ longitude: event.target.value })} ></Input>
+                  <Input value={this.state.useCurrent ? this.state.coords.longitude : this.state.longitude} onChange={event => this.setState({ longitude: event.target.value })} ></Input>
+                </Form.Field>
+                <Button floated='left' primary basic onClick={() => this.setState({ useCurrent: true })} >
+                  <Icon name='location arrow' />Use Current Location
+                </Button>
+              </Form.Group>
+              <Form.Group inline>
+                <Form.Field width={5}>
+                  <label>Location Radius</label>
+                  <Input placeholder="in meters" onChange={event => this.setState({ radius: event.target.value })} ></Input>
+                </Form.Field>
+                <Form.Field width={5}>
+                  <label>User State</label>
+                  <Input onChange={event => this.setState({ userState: event.target.value })} ></Input>
                 </Form.Field>
               </Form.Group>
-              <Form.Field width={5}>
-                <label>Location Radius</label>
-                <Input placeholder="in meters" onChange={event => this.setState({ radius: event.target.value })} ></Input>
-              </Form.Field>
               <Button floated='left' primary basic loading={this.state.loading}>
                 <Icon name='sign-in' />Add
-              </Button>
+              </Button> <br /> <br />
               <Message error header="Oops!" content={this.state.errorMessage} />
               {statusMessage}
             </Form>
           }
         </Grid.Column>
-      </Grid>
+      </Grid >
     );
   }
 }

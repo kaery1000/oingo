@@ -36,16 +36,18 @@ class Home extends Component {
                 <br /><br />
                 <Button.Group>
                   <Link to='/oingo/user_details'><Button>Profile</Button></Link>
+                  <Link to='/oingo/user_friends'><Button>Friends</Button></Link>
+                  <Link to='/oingo/user_state'><Button>User State</Button></Link>
                 </Button.Group><br /><br />
                 <Button.Group>
                   <Link to='/oingo/add_note'><Button>Add Note</Button></Link>
-                  <Link to='/oingo/add_filter'><Button>Add Filter</Button></Link>
-                  <Link to='/oingo/user_friends'><Button>Friends</Button></Link>
+                  <Link to='/oingo/personal_notes'><Button>Personal Notes</Button></Link>
+                  <Link to='/oingo/current_notes'><Button>Current Notes</Button></Link>
                 </Button.Group><br /><br />
                 <Button.Group>
-                  <Link to='/oingo/user_state'><Button>User State</Button></Link>
-                  <Link to='/oingo/personal_notes'><Button>Personal Notes</Button></Link>
-                </Button.Group>
+                  <Link to='/oingo/add_filter'><Button>Add Filter</Button></Link>
+                  <Link to='/oingo/filter_list'><Button>Get Filters</Button></Link>
+                </Button.Group><br /><br />
                 <br /><br /><br />
               </Card.Description>
             </Card.Content>
