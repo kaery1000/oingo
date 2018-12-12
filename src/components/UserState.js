@@ -62,7 +62,6 @@ class UserState extends Component {
     }
 
     let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-    console.log(res);
     this.setState({ loading: false, msg: "State updated!" });
   }
 

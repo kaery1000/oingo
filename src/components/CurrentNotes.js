@@ -24,7 +24,6 @@ class CurrentNotes extends Component {
   async componentDidMount() {
     this.setState({ loadingData: true });
     document.title = "Oingo | Current Notes";
-    //this.getLocation();
     let session = '', loggedin = false;
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     var cognitoUser = userPool.getCurrentUser();
@@ -40,7 +39,7 @@ class CurrentNotes extends Component {
     }
 
     if (loggedin) {
-
+      // Get location
       var options = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -61,9 +60,6 @@ class CurrentNotes extends Component {
       }
       window.navigator.geolocation.getCurrentPosition(success, error, options);
 
-
-
-
       let rdsStateRequest = {
         'retrieve': 'getState',
         'uID': session.idToken.payload.sub
@@ -83,7 +79,6 @@ class CurrentNotes extends Component {
       }
 
       let res = await awsSigning(rdsRequest, 'v1/oingordsaction');
-      console.log(res);
       if (Array.isArray(res.data.body)) {
         this.setState({ notes: res.data.body });
       }
