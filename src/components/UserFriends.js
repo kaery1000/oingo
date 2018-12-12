@@ -166,7 +166,12 @@ class UserFriends extends Component {
               {this.state.friends.length > 0 && this.renderFriends()}
               {this.state.friends.length === 0 && <h3>No Friends!</h3>}
 
-              {this.state.pendingReq.length > 0 && this.renderPendingReq()}
+              {this.state.pendingReq.length > 0 &&
+                <div>
+                  <br /><h3>Pending Requests</h3>
+                  {this.renderPendingReq()}
+                </div>
+              }
               {this.state.pendingReq.length === 0 && <h3>No Pending Requests!</h3>}
 
               <h3>Sent Friend Request</h3>
